@@ -199,7 +199,7 @@ class ViewController: UIViewController {
         let center = CGPoint(x: shapeViev.frame.width / 2, y: shapeViev.frame.height / 2)
         let endAngle = (-CGFloat.pi / 2)
         let startAngle = 2 * CGFloat.pi + endAngle
-        let circularPath = UIBezierPath(arcCenter: center, radius: 112, startAngle: startAngle, endAngle: endAngle, clockwise: false)
+        let circularPath = UIBezierPath(arcCenter: center, radius: 113, startAngle: startAngle, endAngle: endAngle, clockwise: false)
         
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = circularPath.cgPath

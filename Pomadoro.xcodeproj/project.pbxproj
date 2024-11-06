@@ -18,7 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		12CA5B5A2819576900DBAD3A /* HW-12-Abramov-Pavel-iOS5-Pomadoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HW-12-Abramov-Pavel-iOS5-Pomadoro.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		12CA5B5A2819576900DBAD3A /* Pomadoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomadoro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12CA5B5D2819576900DBAD3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		12CA5B5F2819576900DBAD3A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		12CA5B612819576900DBAD3A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -44,7 +44,7 @@
 		12CA5B512819576900DBAD3A = {
 			isa = PBXGroup;
 			children = (
-				12CA5B5C2819576900DBAD3A /* HW-12-Abramov-Pavel-iOS5-Pomadoro */,
+				12CA5B5C2819576900DBAD3A /* Pomadoro */,
 				12CA5B5B2819576900DBAD3A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -52,12 +52,12 @@
 		12CA5B5B2819576900DBAD3A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				12CA5B5A2819576900DBAD3A /* HW-12-Abramov-Pavel-iOS5-Pomadoro.app */,
+				12CA5B5A2819576900DBAD3A /* Pomadoro.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		12CA5B5C2819576900DBAD3A /* HW-12-Abramov-Pavel-iOS5-Pomadoro */ = {
+		12CA5B5C2819576900DBAD3A /* Pomadoro */ = {
 			isa = PBXGroup;
 			children = (
 				18A0DF7B2CD99F9600F3D354 /* UI + Extancion.swift */,
@@ -70,15 +70,15 @@
 				12CA5B6E2819577900DBAD3A /* Info.plist */,
 				12CA5B662819576900DBAD3A /* HW_12_Abramov_Pavel_iOS5_Pomadoro.xcdatamodeld */,
 			);
-			path = "HW-12-Abramov-Pavel-iOS5-Pomadoro";
+			path = Pomadoro;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		12CA5B592819576900DBAD3A /* HW-12-Abramov-Pavel-iOS5-Pomadoro */ = {
+		12CA5B592819576900DBAD3A /* Pomadoro */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 12CA5B712819577900DBAD3A /* Build configuration list for PBXNativeTarget "HW-12-Abramov-Pavel-iOS5-Pomadoro" */;
+			buildConfigurationList = 12CA5B712819577900DBAD3A /* Build configuration list for PBXNativeTarget "Pomadoro" */;
 			buildPhases = (
 				12CA5B562819576900DBAD3A /* Sources */,
 				12CA5B572819576900DBAD3A /* Frameworks */,
@@ -88,9 +88,9 @@
 			);
 			dependencies = (
 			);
-			name = "HW-12-Abramov-Pavel-iOS5-Pomadoro";
+			name = Pomadoro;
 			productName = "HW-12-Abramov-Pavel-iOS5-Pomadoro";
-			productReference = 12CA5B5A2819576900DBAD3A /* HW-12-Abramov-Pavel-iOS5-Pomadoro.app */;
+			productReference = 12CA5B5A2819576900DBAD3A /* Pomadoro.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -108,7 +108,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 12CA5B552819576900DBAD3A /* Build configuration list for PBXProject "HW-12-Abramov-Pavel-iOS5-Pomadoro" */;
+			buildConfigurationList = 12CA5B552819576900DBAD3A /* Build configuration list for PBXProject "Pomadoro" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -121,7 +121,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				12CA5B592819576900DBAD3A /* HW-12-Abramov-Pavel-iOS5-Pomadoro */,
+				12CA5B592819576900DBAD3A /* Pomadoro */,
 			);
 		};
 /* End PBXProject section */
@@ -297,7 +297,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7J6C95TMNY;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "HW-12-Abramov-Pavel-iOS5-Pomadoro/Info.plist";
+				INFOPLIST_FILE = Pomadoro/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -325,7 +325,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7J6C95TMNY;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "HW-12-Abramov-Pavel-iOS5-Pomadoro/Info.plist";
+				INFOPLIST_FILE = Pomadoro/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -347,7 +347,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		12CA5B552819576900DBAD3A /* Build configuration list for PBXProject "HW-12-Abramov-Pavel-iOS5-Pomadoro" */ = {
+		12CA5B552819576900DBAD3A /* Build configuration list for PBXProject "Pomadoro" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				12CA5B6F2819577900DBAD3A /* Debug */,
@@ -356,7 +356,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		12CA5B712819577900DBAD3A /* Build configuration list for PBXNativeTarget "HW-12-Abramov-Pavel-iOS5-Pomadoro" */ = {
+		12CA5B712819577900DBAD3A /* Build configuration list for PBXNativeTarget "Pomadoro" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				12CA5B722819577900DBAD3A /* Debug */,
