@@ -65,21 +65,42 @@ class ViewController: UIViewController {
     func setupDatePickers() {
         // Настройка UIDatePicker для Pomodoro
         pomodoroPicker.datePickerMode = .countDownTimer
+        pomodoroPicker.backgroundColor = .lightGray.withAlphaComponent(0.2)
         pomodoroPicker.countDownDuration = TimeInterval(pomodoroIntervalTime)
         pomodoroPicker.translatesAutoresizingMaskIntoConstraints = false
+        pomodoroPicker.layer.cornerRadius = 20  // Замените 10 на нужное значение
+        pomodoroPicker.layer.masksToBounds = true
+        pomodoroPicker.layer.shadowColor = UIColor.blue.cgColor    // Цвет тени
+        pomodoroPicker.layer.shadowOpacity = 0.8                    // Прозрачность тени (0.0 - полностью прозрачная, 1.0 - полностью непрозрачная)
+        pomodoroPicker.layer.shadowOffset = CGSize(width: 3, height: 3)  // Смещение тени (положительные значения сдвигают тень вправо и вниз)
+        pomodoroPicker.layer.shadowRadius = 8
+        
         view.addSubview(pomodoroPicker)
         
         // Настройка UIDatePicker для отдыха
         restPicker.datePickerMode = .countDownTimer
+        restPicker.backgroundColor = .lightGray.withAlphaComponent(0.2)
         restPicker.countDownDuration = TimeInterval(restBreakIntervalTime)
         restPicker.translatesAutoresizingMaskIntoConstraints = false
+        restPicker.layer.cornerRadius = 20  // Замените 10 на нужное значение
+        restPicker.layer.masksToBounds = true
+        restPicker.layer.shadowColor = UIColor.blue.cgColor    // Цвет тени
+        restPicker.layer.shadowOpacity = 0.8                    // Прозрачность тени (0.0 - полностью прозрачная, 1.0 - полностью непрозрачная)
+        restPicker.layer.shadowOffset = CGSize(width: 3, height: 3)  // Смещение тени (положительные значения сдвигают тень вправо и вниз)
+        restPicker.layer.shadowRadius = 8
+        
         view.addSubview(restPicker)
         
         // Устанавливаем ограничения
         NSLayoutConstraint.activate([
-            pomodoroPicker.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            pomodoroPicker.topAnchor.constraint(equalTo: shapeViev.topAnchor, constant: -120),
             pomodoroPicker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            restPicker.topAnchor.constraint(equalTo: resetButton.bottomAnchor, constant: 1),
+            pomodoroPicker.heightAnchor.constraint(equalToConstant: 100),
+            pomodoroPicker.widthAnchor.constraint(equalToConstant: 200),
+            //pomodoroPicker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            restPicker.topAnchor.constraint(equalTo: resetButton.bottomAnchor, constant: 10),
+            restPicker.heightAnchor.constraint(equalToConstant: 100),
+            restPicker.widthAnchor.constraint(equalToConstant: 200),
             restPicker.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
