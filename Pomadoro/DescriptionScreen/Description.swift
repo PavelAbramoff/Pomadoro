@@ -28,7 +28,7 @@ class DescriptionViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .customBlue
         setupLayout()
     }
     
@@ -86,18 +86,21 @@ class DescriptionViewController: UIViewController {
     private func configureBackButton() {
         backButton.translatesAutoresizingMaskIntoConstraints = false
         backButton.setImage(UIImage(named: "Back-Icon"), for: .normal)
+        backButton.tintColor = .white
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
     }
     
     private func configureLabel() {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Description"
+        label.textColor = .white
         label.font = .systemFont(ofSize: 24, weight: .bold)
     }
     
     private func configureTopView() {
         topView.translatesAutoresizingMaskIntoConstraints = false
-        topView.backgroundColor = .white // Optional styling for the top view
+        topView.backgroundColor = .customBlue
+        // Optional styling for the top view
     }
     
     private func configureStackView() {
