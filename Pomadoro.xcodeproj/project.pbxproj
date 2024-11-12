@@ -18,6 +18,10 @@
 		18E621FC2CE199F60097EE8A /* UIColor + Extyancion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E621FB2CE199E60097EE8A /* UIColor + Extyancion.swift */; };
 		18E621FE2CE1A4240097EE8A /* Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E621FD2CE1A3FF0097EE8A /* Description.swift */; };
 		18E622042CE1CF9A0097EE8A /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E622032CE1CF860097EE8A /* SettingViewController.swift */; };
+		18E622062CE2BAE50097EE8A /* SoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E622052CE2BAD20097EE8A /* SoundView.swift */; };
+		18E622082CE2BBB50097EE8A /* UILabel+ Extancion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E622072CE2BBB50097EE8A /* UILabel+ Extancion.swift */; };
+		18E6220B2CE2F1C20097EE8A /* ColorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E6220A2CE2F1B40097EE8A /* ColorButton.swift */; };
+		18E6220E2CE2F4710097EE8A /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E6220D2CE2F4660097EE8A /* UIStackView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +38,10 @@
 		18E621FB2CE199E60097EE8A /* UIColor + Extyancion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor + Extyancion.swift"; sourceTree = "<group>"; };
 		18E621FD2CE1A3FF0097EE8A /* Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Description.swift; sourceTree = "<group>"; };
 		18E622032CE1CF860097EE8A /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		18E622052CE2BAD20097EE8A /* SoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundView.swift; sourceTree = "<group>"; };
+		18E622072CE2BBB50097EE8A /* UILabel+ Extancion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+ Extancion.swift"; sourceTree = "<group>"; };
+		18E6220A2CE2F1B40097EE8A /* ColorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorButton.swift; sourceTree = "<group>"; };
+		18E6220D2CE2F4660097EE8A /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +74,7 @@
 		12CA5B5C2819576900DBAD3A /* Pomadoro */ = {
 			isa = PBXGroup;
 			children = (
+				18E622052CE2BAD20097EE8A /* SoundView.swift */,
 				18E622032CE1CF860097EE8A /* SettingViewController.swift */,
 				18E622022CE1B3500097EE8A /* DescriptionScreen */,
 				18E622012CE1B3390097EE8A /* MainScreen */,
@@ -83,8 +92,8 @@
 		18E621FF2CE1B2DF0097EE8A /* Extancions */ = {
 			isa = PBXGroup;
 			children = (
-				18E621FB2CE199E60097EE8A /* UIColor + Extyancion.swift */,
-				18A0DF7B2CD99F9600F3D354 /* UI + Extancion.swift */,
+				18E6220C2CE2F4490097EE8A /* UIKit */,
+				18E622092CE2F1980097EE8A /* Componrnts */,
 			);
 			path = Extancions;
 			sourceTree = "<group>";
@@ -112,6 +121,25 @@
 				18E621FD2CE1A3FF0097EE8A /* Description.swift */,
 			);
 			path = DescriptionScreen;
+			sourceTree = "<group>";
+		};
+		18E622092CE2F1980097EE8A /* Componrnts */ = {
+			isa = PBXGroup;
+			children = (
+				18E6220A2CE2F1B40097EE8A /* ColorButton.swift */,
+				18E622072CE2BBB50097EE8A /* UILabel+ Extancion.swift */,
+			);
+			path = Componrnts;
+			sourceTree = "<group>";
+		};
+		18E6220C2CE2F4490097EE8A /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				18E6220D2CE2F4660097EE8A /* UIStackView.swift */,
+				18A0DF7B2CD99F9600F3D354 /* UI + Extancion.swift */,
+				18E621FB2CE199E60097EE8A /* UIColor + Extyancion.swift */,
+			);
+			path = UIKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -188,8 +216,12 @@
 				18A0DF7C2CD99FA500F3D354 /* UI + Extancion.swift in Sources */,
 				12CA5B682819576900DBAD3A /* HW_12_Abramov_Pavel_iOS5_Pomadoro.xcdatamodeld in Sources */,
 				18E621FE2CE1A4240097EE8A /* Description.swift in Sources */,
+				18E6220B2CE2F1C20097EE8A /* ColorButton.swift in Sources */,
 				18E622042CE1CF9A0097EE8A /* SettingViewController.swift in Sources */,
 				12CA5B622819576900DBAD3A /* ViewController.swift in Sources */,
+				18E622082CE2BBB50097EE8A /* UILabel+ Extancion.swift in Sources */,
+				18E6220E2CE2F4710097EE8A /* UIStackView.swift in Sources */,
+				18E622062CE2BAE50097EE8A /* SoundView.swift in Sources */,
 				18E621FC2CE199F60097EE8A /* UIColor + Extyancion.swift in Sources */,
 				12CA5B5E2819576900DBAD3A /* AppDelegate.swift in Sources */,
 				12CA5B602819576900DBAD3A /* SceneDelegate.swift in Sources */,

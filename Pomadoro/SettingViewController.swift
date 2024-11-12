@@ -7,7 +7,7 @@
 import UIKit
 import AudioToolbox
 
-class SettingsViewController: UIViewController {
+class SettingsViewController: UIViewController, SoundSelectionDelegate {
     
     // MARK: - UI Elements
     
@@ -17,6 +17,7 @@ class SettingsViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "Back-Icon"), for: .normal)
         button.addTarget(self, action: #selector (backButtonPressed), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -24,53 +25,56 @@ class SettingsViewController: UIViewController {
         let label = UILabel()
         label.text = "Setting"
         label.font = .boldSystemFont(ofSize: 25)
-        label.textColor = .black
+        label.textColor = .white
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.6
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
+    private let buttonBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .customBlue
+        view.layer.cornerRadius = 20
+        view.addShadowOnView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let blueButton = ColorButton(color: .customBlue)
+    private let greenButton = ColorButton(color: .green)
+    private let blackButton = ColorButton(color: .black)
+    private let orrangeButton = ColorButton(color: .orange)
+    private let brownButton = ColorButton(color: .brown)
+    
+    private lazy var stackView = UIStackView(arrangedSubviews: [blueButton,
+                                                                greenButton,
+                                                                blackButton,
+                                                                orrangeButton,
+                                                                brownButton],
+                                             
+                                             axis: .horizontal,
+                                             spacinng: 10)
+    
     let colorPickerLabel: UILabel = {
         let label = UILabel()
-        label.text = "Choose Timer Color"
-        label.textColor = .black
-        label.backgroundColor = .customBlue
+        label.text = "Choose Color"
+        label.textColor = .white
+        label.font = .boldSystemFont(ofSize: 20)
+        label.backgroundColor = .clear
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    let colorPicker: UIColorPickerViewController = {
-        let picker = UIColorPickerViewController()
-        picker.supportsAlpha = false
-        return picker
-    }()
-    
-    let soundLabel: UILabel = {
+    let soundsChooseLabel: UILabel = {
         let label = UILabel()
-        label.text = "Choose End Sound"
-        label.textColor = .black
+        label.text = "Choose Sounds"
+        label.textColor = .white
+        label.font = .boldSystemFont(ofSize: 20)
+        label.backgroundColor = .clear
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    let soundPicker: UISegmentedControl = {
-        let control = UISegmentedControl(items: ["Sound 1", "Sound 2", "Sound 3"])
-        control.selectedSegmentIndex = 0
-        control.translatesAutoresizingMaskIntoConstraints = false
-        return control
-    }()
-    
-    let addIntervalButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Add Interval", for: .normal)
-        button.setTitleColor(.blue, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    var timerColor: UIColor = .customBlue // Цвет таймера, по умолчанию
-    var selectedSound: Int = 0 // Выбор звука, по умолчанию
     
     @objc func backButtonPressed() {
         self.backButton.alpha = 0.5
@@ -79,75 +83,90 @@ class SettingsViewController: UIViewController {
         })
         self.dismiss(animated: true)
     }
-
+    
+    var selectedSound: SoundType = .defaultSound {
+           didSet {
+               // Сохраняем выбранный звук в UserDefaults
+               UserDefaults.standard.set(selectedSound.rawValue, forKey: "SelectedSound")
+           }
+       }
+    
+    
+    private let soundSelectionView = SoundSelectionView(selectedSound: .defaultSound)
+    
     // MARK: - Initial Setup
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .customBlue
+        
+        soundSelectionView.delegate = self
+        soundSelectionView.addShadowOnView()
         setupUI()
+        setConstraints()
+        loadSelectedSound()
     }
     
     private func setupUI() {
-       
+        
         view.addSubview(colorPickerLabel)
-        view.addSubview(soundLabel)
-        view.addSubview(soundPicker)
-        view.addSubview(addIntervalButton)
+        view.addSubview(buttonBackgroundView)
         view.addSubview(backButton)
         view.addSubview(settingLabel)
-        
-        backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
-        backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
-        
-        settingLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        settingLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
-        
-        colorPickerLabel.topAnchor.constraint(equalTo: settingLabel.bottomAnchor, constant: 50).isActive = true
-        colorPickerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        soundLabel.topAnchor.constraint(equalTo: colorPickerLabel.bottomAnchor, constant: 30).isActive = true
-        soundLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        soundPicker.topAnchor.constraint(equalTo: soundLabel.bottomAnchor, constant: 10).isActive = true
-        soundPicker.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        addIntervalButton.topAnchor.constraint(equalTo: soundPicker.bottomAnchor, constant: 30).isActive = true
-        addIntervalButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        addIntervalButton.addTarget(self, action: #selector(addIntervalButtonTapped), for: .touchUpInside)
-        
-        // Add gesture for color picker
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showColorPicker))
-        view.addGestureRecognizer(tapGesture)
+        view.addSubview(colorPickerLabel)
+        view.addSubview(stackView)
+        view.addSubview(soundsChooseLabel)
+        soundSelectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(soundSelectionView)
     }
     
+    func didSelectSound(_ sound: SoundType) {
+        selectedSound = sound
+       }
     
-    
-    @objc func addIntervalButtonTapped() {
-        // Логика для добавления нового интервала (это можно дополнить позже)
-        print("Add interval tapped")
-    }
-    
-    @objc func showColorPicker() {
-        // Открытие color picker
-        colorPicker.delegate = self
-        present(colorPicker, animated: true, completion: nil)
-    }
-    
-    // Сохранение выбранного цвета
-    func updateTimerColor(_ color: UIColor) {
-        timerColor = color
-        // Примените этот цвет в основном экране (например, для фона таймера)
-    }
+    private func loadSelectedSound() {
+           if let soundRawValue = UserDefaults.standard.string(forKey: "SelectedSound"),
+              let sound = SoundType(rawValue: soundRawValue) {
+               selectedSound = sound
+           }
+       }
 }
 
-extension SettingsViewController: UIColorPickerViewControllerDelegate {
-    func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
-        updateTimerColor(viewController.selectedColor)
-    }
+extension SettingsViewController {
     
-    func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
-        // Можно добавить дополнительные действия по завершению выбора
+    private func setConstraints() {
+        NSLayoutConstraint.activate([
+            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
+            
+            settingLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            settingLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 28),
+            
+            buttonBackgroundView.topAnchor.constraint(equalTo: view.topAnchor,constant: 160),
+            buttonBackgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            buttonBackgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            buttonBackgroundView.heightAnchor.constraint(equalToConstant: 150),
+            
+            colorPickerLabel.topAnchor.constraint(equalTo: settingLabel.bottomAnchor, constant: 20),
+            colorPickerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            stackView.centerXAnchor.constraint(equalTo: buttonBackgroundView.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: buttonBackgroundView.centerYAnchor),
+            stackView.topAnchor.constraint(equalTo: buttonBackgroundView.topAnchor, constant: 10),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 30),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            stackView.heightAnchor.constraint(equalToConstant: 60),
+            
+            soundsChooseLabel.topAnchor.constraint(equalTo: buttonBackgroundView.bottomAnchor,constant: 20),
+            soundsChooseLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            soundSelectionView.topAnchor.constraint(equalTo: soundsChooseLabel.topAnchor, constant: 40),
+            soundSelectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 20),
+            soundSelectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20),
+            soundSelectionView.heightAnchor.constraint(equalToConstant: 200)
+            
+                    
+            
+        ])
     }
 }

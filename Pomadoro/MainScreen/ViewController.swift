@@ -21,19 +21,28 @@ class ViewController: UIViewController {
     var timeRemaining = 0
     var timer = Timer()
     
-    func playDefaultSound() {
-        AudioServicesPlaySystemSound(SystemSoundID(4095))
+    var selectedSound: SoundType = .defaultSound
+    
+    private func loadSelectedSound() {
+            if let soundRawValue = UserDefaults.standard.string(forKey: "SelectedSound"),
+               let sound = SoundType(rawValue: soundRawValue) {
+                selectedSound = sound
+            }
+        }
+    
+    func playSelectedSound() {
+           selectedSound.play()
     }
     
     func playThreeBeepSounds() {
-        playDefaultSound()
+        playSelectedSound()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.playDefaultSound()
+            self.playSelectedSound()
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-            self.playDefaultSound()
+            self.playSelectedSound()
         }
     }
     
@@ -101,6 +110,8 @@ class ViewController: UIViewController {
         setupDatePickers()
         setupViews()
         setConstraints()
+        loadSelectedSound()
+        
     }
     
     private func setupViews() {
