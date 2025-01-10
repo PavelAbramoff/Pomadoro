@@ -4,10 +4,10 @@
 //
 //  Created by apple on 11/11/24.
 //
+
 import UIKit
 import AudioToolbox
 
-// Enum для выбора звуков
 enum SoundType: String {
     case defaultSound = "Default"
     case beep = "Beep"
@@ -20,19 +20,19 @@ enum SoundType: String {
     var soundID: SystemSoundID? {
         switch self {
         case .defaultSound:
-            return SystemSoundID(4095)  // Звук по умолчанию
+            return SystemSoundID(4095)
         case .beep:
-            return SystemSoundID(1104)  // Пример звука "Beep"
+            return SystemSoundID(1104)
         case .bell:
-            return SystemSoundID(1015)  // Пример звука "Bell"
+            return SystemSoundID(1015)
         case .alarm:
-            return SystemSoundID(1016)  // Пример звука "Alarm"
+            return SystemSoundID(1016)
         case .chime:
-            return SystemSoundID(1007)  // Пример звука "Chime"
+            return SystemSoundID(1007)
         case .whistle:
-            return SystemSoundID(1020)  // Пример звука "Whistle"
+            return SystemSoundID(1020)
         case .vibration:
-            return nil  // Вибрация не имеет soundID
+            return nil
         }
     }
     
@@ -45,31 +45,33 @@ enum SoundType: String {
     }
 }
 
-// Делегат для передачи выбора
 protocol SoundSelectionDelegate: AnyObject {
     func didSelectSound(_ sound: SoundType)
 }
 
 class SoundSelectionView: UIView, UITableViewDelegate, UITableViewDataSource {
-
+    
     weak var delegate: SoundSelectionDelegate?
     
     var sounds: [SoundType] = [.defaultSound, .beep, .bell, .alarm, .chime, .whistle, .vibration]
-       var selectedSound: SoundType = .defaultSound
+    
+    var selectedSound: SoundType = .defaultSound
+    
+    let soundKey: String = "SelectedSound"
     
     private let tableView = UITableView()
     
-    // Инициализатор
     init(selectedSound: SoundType) {
         super.init(frame: .zero)
         self.selectedSound = selectedSound
         setupTableView()
+        loadSelectedSound()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -86,39 +88,69 @@ class SoundSelectionView: UIView, UITableViewDelegate, UITableViewDataSource {
             tableView.rightAnchor.constraint(equalTo: self.rightAnchor)
         ])
     }
-
+    
     // MARK: - TableView DataSource
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sounds.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SoundCell", for: indexPath)
         let sound = sounds[indexPath.row]
         
         cell.textLabel?.text = sound.rawValue
-        cell.accessoryType = sound == selectedSound ? .checkmark : .none
+        cell.accessoryType = (sound == selectedSound) ? .checkmark : .none
         
         return cell
     }
-
+    
     // MARK: - TableView Delegate
-
+    
+    private var selectedIndex: IndexPath?
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selected = sounds[indexPath.row]
         
-        // Обновляем выбранный звук
+        // Update sound
         selectedSound = selected
+        print(selectedSound)
         
-        // Перезагружаем таблицу для обновления галочки
+        selectedIndex = IndexPath(row: sounds.firstIndex(of: selected) ?? 0, section: 0)
+        
+        // Reload table
         tableView.reloadData()
         
-        // Оповещаем делегата о выборе
+        // Save sound in UserDefaults
+        UserDefaults.standard.set(selectedSound.rawValue, forKey: soundKey)
+        UserDefaults.standard.synchronize()
+        
+        // Tell to delegate about changes
         delegate?.didSelectSound(selected)
         
-        // Проигрываем выбранный звук для проверки
+        tableView.reloadData()
         selected.play()
+        
+        if let delegate = delegate {
+            print("Делегат передаёт выбранный звук \(selected)")
+            delegate.didSelectSound(selected)
+        } else {
+            print("Делегат отсутствует")
+        }
+    }
+    
+    private func loadSelectedSound() {
+        if let soundRawValue = UserDefaults.standard.string(forKey: soundKey),
+           let sound = SoundType(rawValue: soundRawValue) {
+            print("Загружен звук: \(sound.rawValue)")
+            selectedSound = sound
+            print(selectedSound)
+        }
+    }
+    
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        loadSelectedSound()
     }
 }
 

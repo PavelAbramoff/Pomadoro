@@ -10,8 +10,6 @@ import AudioToolbox
 class SettingsViewController: UIViewController, SoundSelectionDelegate {
     
     // MARK: - UI Elements
-    
-    
     private lazy var backButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -54,7 +52,7 @@ class SettingsViewController: UIViewController, SoundSelectionDelegate {
                                                                 brownButton],
                                              
                                              axis: .horizontal,
-                                             spacinng: 10)
+                                             spacing: 10)
     
     let colorPickerLabel: UILabel = {
         let label = UILabel()
@@ -76,39 +74,35 @@ class SettingsViewController: UIViewController, SoundSelectionDelegate {
         return label
     }()
     
+    func didSelectSound(_ sound: SoundType) {
+        sound.play()
+        print("Сохраненный звук: \(UserDefaults.standard.string(forKey: "SelectedSound") ?? "nil")")
+    }
+    
     @objc func backButtonPressed() {
         self.backButton.alpha = 0.5
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
             self.backButton.alpha = 1
         })
+        NotificationCenter.default.post(name: Notification.Name("SoundDidChange"), object: nil)
         self.dismiss(animated: true)
     }
     
-    var selectedSound: SoundType = .defaultSound {
-           didSet {
-               // Сохраняем выбранный звук в UserDefaults
-               UserDefaults.standard.set(selectedSound.rawValue, forKey: "SelectedSound")
-           }
-       }
     
-    
-    private let soundSelectionView = SoundSelectionView(selectedSound: .defaultSound)
+   let soundSelectionView = SoundSelectionView(selectedSound: .defaultSound)
     
     // MARK: - Initial Setup
     
-    override func viewDidLoad() {
+override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBlue
-        
         soundSelectionView.delegate = self
+        view.backgroundColor = .customBlue
         soundSelectionView.addShadowOnView()
         setupUI()
         setConstraints()
-        loadSelectedSound()
     }
     
     private func setupUI() {
-        
         view.addSubview(colorPickerLabel)
         view.addSubview(buttonBackgroundView)
         view.addSubview(backButton)
@@ -119,17 +113,6 @@ class SettingsViewController: UIViewController, SoundSelectionDelegate {
         soundSelectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(soundSelectionView)
     }
-    
-    func didSelectSound(_ sound: SoundType) {
-        selectedSound = sound
-       }
-    
-    private func loadSelectedSound() {
-           if let soundRawValue = UserDefaults.standard.string(forKey: "SelectedSound"),
-              let sound = SoundType(rawValue: soundRawValue) {
-               selectedSound = sound
-           }
-       }
 }
 
 extension SettingsViewController {
@@ -164,8 +147,6 @@ extension SettingsViewController {
             soundSelectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 20),
             soundSelectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20),
             soundSelectionView.heightAnchor.constraint(equalToConstant: 200)
-            
-                    
             
         ])
     }

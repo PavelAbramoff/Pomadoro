@@ -16,35 +16,13 @@ class ViewController: UIViewController {
     }
     
     var intervals: [IntervalType] = [.Pomodoro, .RestBreak ]
-    
     var currentInterval = 0
     var timeRemaining = 0
     var timer = Timer()
     
     var selectedSound: SoundType = .defaultSound
     
-    private func loadSelectedSound() {
-            if let soundRawValue = UserDefaults.standard.string(forKey: "SelectedSound"),
-               let sound = SoundType(rawValue: soundRawValue) {
-                selectedSound = sound
-            }
-        }
-    
-    func playSelectedSound() {
-           selectedSound.play()
-    }
-    
-    func playThreeBeepSounds() {
-        playSelectedSound()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.playSelectedSound()
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-            self.playSelectedSound()
-        }
-    }
+    let soundKey: String = "SelectedSound"
     
     var pomodoroIntervalTime: Int = 1 // 25 минут
     var restBreakIntervalTime: Int = 1  // 5 минут
@@ -52,7 +30,6 @@ class ViewController: UIViewController {
     private lazy var rulesButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "Frame"), for: .normal)
-        //button.tintColor = .white
         button.addTarget(self, action: #selector(rulesButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -103,6 +80,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateSound), name: Notification.Name("SoundDidChange"), object: nil)
         view.backgroundColor = .customBlue
         shapeViev.backgroundColor = .customBlue
         animationCircular()
@@ -111,7 +89,6 @@ class ViewController: UIViewController {
         setupViews()
         setConstraints()
         loadSelectedSound()
-        
     }
     
     private func setupViews() {
@@ -127,7 +104,37 @@ class ViewController: UIViewController {
         configureShapeViewStyle()
         
         shapeViev.layer.cornerRadius = 35
+    }
+    
+    
+    @objc func updateSound() {
+        loadSelectedSound() // Обновление звука из UserDefaults
+        print("Звук обновлен: \(selectedSound)")
+    }
+    
+    private func loadSelectedSound() {
+        if let soundRawValue = UserDefaults.standard.string(forKey: soundKey),
+           let sound = SoundType(rawValue: soundRawValue) {
+            selectedSound = sound
+            print(selectedSound)
+        }
+    }
+    
+    func playSelectedSound() {
+        selectedSound.play()
+        print(selectedSound)
+    }
+    
+    func playThreeBeepSounds() {
+        playSelectedSound()
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.playSelectedSound()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            self.playSelectedSound()
+        }
     }
     
     private func configureButtonStyle(_ button: UIButton) {
@@ -234,8 +241,8 @@ class ViewController: UIViewController {
         updateDisplay()
         
         if let shapeLayer = shapeViev.layer.sublayers?.first(where: { $0 is CAShapeLayer }) as? CAShapeLayer {
-                shapeLayer.removeAllAnimations()
-            }
+            shapeLayer.removeAllAnimations()
+        }
     }
     
     func startNextInterval() {
@@ -345,7 +352,7 @@ extension ViewController {
             pomodoroPicker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             pomodoroPicker.heightAnchor.constraint(equalToConstant: 100),
             pomodoroPicker.widthAnchor.constraint(equalToConstant: 220),
-    
+            
             restPicker.topAnchor.constraint(equalTo: resetButton.bottomAnchor, constant: 10),
             restPicker.heightAnchor.constraint(equalToConstant: 80),
             restPicker.widthAnchor.constraint(equalToConstant: 200),

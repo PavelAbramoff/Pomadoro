@@ -11,7 +11,6 @@ class ColorButton: UIButton {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
     }
     
     required init?(coder: NSCoder) {
@@ -27,7 +26,6 @@ class ColorButton: UIButton {
         layer.cornerRadius = 30
         backgroundColor = color
         translatesAutoresizingMaskIntoConstraints = false
-        
         addShadowOnView()
     }
 }
