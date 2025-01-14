@@ -14,6 +14,8 @@
 		12CA5B682819576900DBAD3A /* HW_12_Abramov_Pavel_iOS5_Pomadoro.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 12CA5B662819576900DBAD3A /* HW_12_Abramov_Pavel_iOS5_Pomadoro.xcdatamodeld */; };
 		12CA5B6A2819577900DBAD3A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12CA5B692819577900DBAD3A /* Assets.xcassets */; };
 		12CA5B6D2819577900DBAD3A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12CA5B6B2819577900DBAD3A /* LaunchScreen.storyboard */; };
+		1893AA8D2D35C04B000810B7 /* UIDatePicker + Extancion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1893AA8C2D35C02C000810B7 /* UIDatePicker + Extancion.swift */; };
+		1893AA8F2D35C4A5000810B7 /* IconButton + Extancion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1893AA8E2D35C424000810B7 /* IconButton + Extancion.swift */; };
 		18A0DF7C2CD99FA500F3D354 /* UI + Extancion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A0DF7B2CD99F9600F3D354 /* UI + Extancion.swift */; };
 		18E621FC2CE199F60097EE8A /* UIColor + Extyancion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E621FB2CE199E60097EE8A /* UIColor + Extyancion.swift */; };
 		18E621FE2CE1A4240097EE8A /* Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E621FD2CE1A3FF0097EE8A /* Description.swift */; };
@@ -34,6 +36,8 @@
 		12CA5B692819577900DBAD3A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12CA5B6C2819577900DBAD3A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		12CA5B6E2819577900DBAD3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1893AA8C2D35C02C000810B7 /* UIDatePicker + Extancion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDatePicker + Extancion.swift"; sourceTree = "<group>"; };
+		1893AA8E2D35C424000810B7 /* IconButton + Extancion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IconButton + Extancion.swift"; sourceTree = "<group>"; };
 		18A0DF7B2CD99F9600F3D354 /* UI + Extancion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UI + Extancion.swift"; sourceTree = "<group>"; };
 		18E621FB2CE199E60097EE8A /* UIColor + Extyancion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor + Extyancion.swift"; sourceTree = "<group>"; };
 		18E621FD2CE1A3FF0097EE8A /* Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Description.swift; sourceTree = "<group>"; };
@@ -126,6 +130,8 @@
 		18E622092CE2F1980097EE8A /* Componrnts */ = {
 			isa = PBXGroup;
 			children = (
+				1893AA8E2D35C424000810B7 /* IconButton + Extancion.swift */,
+				1893AA8C2D35C02C000810B7 /* UIDatePicker + Extancion.swift */,
 				18E6220A2CE2F1B40097EE8A /* ColorButton.swift */,
 				18E622072CE2BBB50097EE8A /* UILabel+ Extancion.swift */,
 			);
@@ -215,6 +221,7 @@
 			files = (
 				18A0DF7C2CD99FA500F3D354 /* UI + Extancion.swift in Sources */,
 				12CA5B682819576900DBAD3A /* HW_12_Abramov_Pavel_iOS5_Pomadoro.xcdatamodeld in Sources */,
+				1893AA8F2D35C4A5000810B7 /* IconButton + Extancion.swift in Sources */,
 				18E621FE2CE1A4240097EE8A /* Description.swift in Sources */,
 				18E6220B2CE2F1C20097EE8A /* ColorButton.swift in Sources */,
 				18E622042CE1CF9A0097EE8A /* SettingViewController.swift in Sources */,
@@ -225,6 +232,7 @@
 				18E621FC2CE199F60097EE8A /* UIColor + Extyancion.swift in Sources */,
 				12CA5B5E2819576900DBAD3A /* AppDelegate.swift in Sources */,
 				12CA5B602819576900DBAD3A /* SceneDelegate.swift in Sources */,
+				1893AA8D2D35C04B000810B7 /* UIDatePicker + Extancion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,25 +10,15 @@ import AudioToolbox
 class SettingsViewController: UIViewController, SoundSelectionDelegate {
     
     // MARK: - UI Elements
-    private lazy var backButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "Back-Icon"), for: .normal)
-        button.addTarget(self, action: #selector (backButtonPressed), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
+    
+    private lazy var backButton: IconButton = {
+        let button = IconButton(imageName: "Back-Icon", target: self, action: #selector(backButtonPressed))
         return button
     }()
     
-    private let settingLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Setting"
-        label.font = .boldSystemFont(ofSize: 25)
-        label.textColor = .white
-        label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.6
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private let settingLabel = UILabel(text: "Setting", font: .boldSystemFont(ofSize: 25), textColor: .white)
+    private let colorPickerLabel = UILabel(text: "Choose Color", font: .boldSystemFont(ofSize: 20), textColor: .white)
+    private let soundsChooseLabel = UILabel(text: "Choose Sounds", font: .boldSystemFont(ofSize: 20), textColor: .white)
     
     private let buttonBackgroundView: UIView = {
         let view = UIView()
@@ -53,26 +43,6 @@ class SettingsViewController: UIViewController, SoundSelectionDelegate {
                                              
                                              axis: .horizontal,
                                              spacing: 10)
-    
-    let colorPickerLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Choose Color"
-        label.textColor = .white
-        label.font = .boldSystemFont(ofSize: 20)
-        label.backgroundColor = .clear
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    let soundsChooseLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Choose Sounds"
-        label.textColor = .white
-        label.font = .boldSystemFont(ofSize: 20)
-        label.backgroundColor = .clear
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
     func didSelectSound(_ sound: SoundType) {
         sound.play()

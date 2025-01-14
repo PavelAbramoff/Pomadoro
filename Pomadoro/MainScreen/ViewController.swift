@@ -51,29 +51,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var resetButton: UIButton!
     @IBOutlet weak var shapeViev: UIImageView!
     
-    private let startTimerLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Set the working time"
-        label.textColor = .gray
-        label.font = .boldSystemFont(ofSize: 25)
-        label.textColor = .white
-        label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.6
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let restTimerLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Set rest time"
-        label.textColor = .gray
-        label.font = .boldSystemFont(ofSize: 25)
-        label.textColor = .white
-        label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.6
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private let startTimerLabel = UILabel(text: "Set the working time", font: .boldSystemFont(ofSize: 25), textColor: .white)
+    private let restTimerLabel = UILabel(text: "Set rest time", font: .boldSystemFont(ofSize: 25), textColor: .white)
     
     let pomodoroPicker = UIDatePicker()
     let restPicker = UIDatePicker()
@@ -105,7 +84,6 @@ class ViewController: UIViewController {
         
         shapeViev.layer.cornerRadius = 35
     }
-    
     
     @objc func updateSound() {
         loadSelectedSound() // Обновление звука из UserDefaults
