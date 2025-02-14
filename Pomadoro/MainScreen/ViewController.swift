@@ -15,10 +15,12 @@ class ViewController: UIViewController {
         case RestBreak
     }
     
+    // MARK: - Properties
     var intervals: [IntervalType] = [.Pomodoro, .RestBreak ]
     var currentInterval = 0
     var timeRemaining = 0
     var timer = Timer()
+    var currentColor = UIColor.customColor
     
     var selectedSound: SoundType = .defaultSound
     
@@ -57,19 +59,34 @@ class ViewController: UIViewController {
     let pomodoroPicker = UIDatePicker()
     let restPicker = UIDatePicker()
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateSound), name: Notification.Name("SoundDidChange"), object: nil)
-        view.backgroundColor = .customBlue
-        shapeViev.backgroundColor = .customBlue
+        view.backgroundColor = .customColor
+        shapeViev.backgroundColor = .customColor
         animationCircular()
         resetToBegining()
         setupDatePickers()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateSound), name: Notification.Name("SoundDidChange"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateCustomColor), name: .customColorDidChange, object: nil)
         setupViews()
         setConstraints()
         loadSelectedSound()
+        loadIntervals()
     }
     
+    @objc private func updateCustomColor() {
+        view.backgroundColor = .customColor
+        shapeViev.backgroundColor = .customColor
+        updateShapeLayerColor()
+    }
+    
+    private func updateShapeLayerColor() {
+        guard let shapeLayer = shapeViev.layer.sublayers?.first(where: { $0 is CAShapeLayer }) as? CAShapeLayer else { return }
+        shapeLayer.strokeColor = UIColor.customColor.cgColor
+    }
+    
+    // MARK: - Setup
     private func setupViews() {
         
         view.addSubview(startTimerLabel)
@@ -180,6 +197,7 @@ class ViewController: UIViewController {
         
         print(settingsButtonTapped)
         let vc = SettingsViewController()
+        vc.delegate = self
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
     }
@@ -306,7 +324,7 @@ class ViewController: UIViewController {
         shapeLayer.shadowOffset = CGSize(width: 0, height: 0) // Смещение тени (по оси X и Y)
         shapeLayer.shadowRadius = 10 // Радиус размытия тени
         
-        shapeLayer.strokeColor = UIColor.customBlue.cgColor
+        shapeLayer.strokeColor = UIColor.customColor.cgColor
         shapeViev.layer.addSublayer(shapeLayer)
     }
     
@@ -320,6 +338,20 @@ class ViewController: UIViewController {
         animation.fillMode = .forwards
         animation.isRemovedOnCompletion = false
         shapeLayer.add(animation, forKey: "strokeAnimation")
+    }
+    
+    private func loadIntervals() {
+        let savedCycles = UserDefaults.standard.integer(forKey: "TotalCycles")
+        intervals = generateIntervals(forCycles: savedCycles)
+    }
+    
+    private func generateIntervals(forCycles cycles: Int) -> [IntervalType] {
+        var intervals: [IntervalType] = []
+        for _ in 0..<cycles {
+            intervals.append(.Pomodoro)
+            intervals.append(.RestBreak)
+        }
+        return intervals
     }
 }
 
@@ -352,5 +384,14 @@ extension ViewController {
             restTimerLabel.topAnchor.constraint(equalTo: restPicker.bottomAnchor, constant: 15),
             restTimerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
+    }
+}
+
+extension ViewController: SettingsViewControllerDelegate {
+    func didUpdateTotalCycles(_ totalCycles: Int) {
+        intervals = generateIntervals(forCycles: totalCycles)
+        currentInterval = 0
+        resetToBegining()
+        print("Интервалы обновлены: \(intervals)")
     }
 }

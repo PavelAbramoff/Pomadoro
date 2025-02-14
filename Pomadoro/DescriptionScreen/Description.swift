@@ -28,8 +28,13 @@ class DescriptionViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBlue
+        view.backgroundColor = .customColor
+        NotificationCenter.default.addObserver(self, selector: #selector(updateCustomColor), name: .customColorDidChange, object: nil)
         setupLayout()
+    }
+    
+    @objc private func updateCustomColor() {
+        view.backgroundColor = .customColor
     }
     
     // MARK: - Private Methods
@@ -99,7 +104,7 @@ class DescriptionViewController: UIViewController {
     
     private func configureTopView() {
         topView.translatesAutoresizingMaskIntoConstraints = false
-        topView.backgroundColor = .customBlue
+        topView.backgroundColor = .customColor
         // Optional styling for the top view
     }
     

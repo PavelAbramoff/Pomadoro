@@ -77,7 +77,7 @@ class SoundSelectionView: UIView, UITableViewDelegate, UITableViewDataSource {
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SoundCell")
         tableView.layer.cornerRadius = 20
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .purple
         tableView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(tableView)
         
@@ -90,7 +90,6 @@ class SoundSelectionView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     // MARK: - TableView DataSource
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sounds.count
     }
@@ -101,50 +100,33 @@ class SoundSelectionView: UIView, UITableViewDelegate, UITableViewDataSource {
         
         cell.textLabel?.text = sound.rawValue
         cell.accessoryType = (sound == selectedSound) ? .checkmark : .none
+        cell.backgroundColor = .purple
         
         return cell
     }
     
     // MARK: - TableView Delegate
-    
     private var selectedIndex: IndexPath?
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selected = sounds[indexPath.row]
         
-        // Update sound
         selectedSound = selected
-        print(selectedSound)
-        
         selectedIndex = IndexPath(row: sounds.firstIndex(of: selected) ?? 0, section: 0)
-        
-        // Reload table
         tableView.reloadData()
-        
-        // Save sound in UserDefaults
         UserDefaults.standard.set(selectedSound.rawValue, forKey: soundKey)
-        UserDefaults.standard.synchronize()
-        
-        // Tell to delegate about changes
         delegate?.didSelectSound(selected)
-        
-        tableView.reloadData()
         selected.play()
         
         if let delegate = delegate {
-            print("Делегат передаёт выбранный звук \(selected)")
             delegate.didSelectSound(selected)
-        } else {
-            print("Делегат отсутствует")
         }
     }
     
     private func loadSelectedSound() {
         if let soundRawValue = UserDefaults.standard.string(forKey: soundKey),
            let sound = SoundType(rawValue: soundRawValue) {
-            print("Загружен звук: \(sound.rawValue)")
             selectedSound = sound
-            print(selectedSound)
         }
     }
     

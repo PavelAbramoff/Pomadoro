@@ -9,13 +9,11 @@ import UIKit
 
 class DatePickerConfigurator: UIDatePicker {
 
-    // Конструктор для инициализации с параметрами
     convenience init(duration: Int, backgroundColor: UIColor = UIColor.lightGray.withAlphaComponent(0.2)) {
         self.init()
         setupPicker(duration: duration, backgroundColor: backgroundColor)
     }
 
-    // Настройка DatePicker
     private func setupPicker(duration: Int, backgroundColor: UIColor) {
         self.datePickerMode = .countDownTimer
         self.tintColor = .white

@@ -19,13 +19,17 @@ class ColorButton: UIButton {
     
     convenience init(color: UIColor) {
         self.init(type: .system)
-        configuure(color: color)
+        configure(color: color)
     }
     
-    private func configuure(color: UIColor) {
+    private func configure(color: UIColor) {
         layer.cornerRadius = 30
         backgroundColor = color
         translatesAutoresizingMaskIntoConstraints = false
         addShadowOnView()
     }
+    
+    override func addTarget(_ target: Any?, action: Selector, for controlEvents: UIControl.Event) {
+            super.addTarget(target, action: action, for: controlEvents)
+        }
 }

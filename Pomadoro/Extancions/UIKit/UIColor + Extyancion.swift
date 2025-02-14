@@ -17,4 +17,28 @@ extension UIColor {
     static let black = #colorLiteral(red: 0.137254902, green: 0.1607843137, blue: 0.2745098039, alpha: 1)
     static let greyBlue = #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)
     static let customGrey = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
+    
+    static var customColor: UIColor {
+            get {
+                if let colorData = UserDefaults.standard.data(forKey: "customColor"),
+                   let color = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(colorData) as? UIColor {
+                    return color
+                }
+                return .customBlue // Цвет по умолчанию
+            }
+            set {
+                if let colorData = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {
+                    UserDefaults.standard.set(colorData, forKey: "customColor")
+                }
+                NotificationCenter.default.post(name: .customColorDidChange, object: nil)
+            }
+        }
+
+        static func updateCustomColor(to color: UIColor) {
+            customColor = color
+        }
+}
+
+extension Notification.Name {
+    static let customColorDidChange = Notification.Name("customColorDidChange")
 }
