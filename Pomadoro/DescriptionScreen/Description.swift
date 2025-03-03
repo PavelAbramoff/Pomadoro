@@ -29,6 +29,7 @@ class DescriptionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customColor
+        view.setGradientBackground(colorOne: .whiteLight, colorTwo: .customColor)
         NotificationCenter.default.addObserver(self, selector: #selector(updateCustomColor), name: .customColorDidChange, object: nil)
         setupLayout()
     }
@@ -104,8 +105,7 @@ class DescriptionViewController: UIViewController {
     
     private func configureTopView() {
         topView.translatesAutoresizingMaskIntoConstraints = false
-        topView.backgroundColor = .customColor
-        // Optional styling for the top view
+        topView.backgroundColor = .clear
     }
     
     private func configureStackView() {

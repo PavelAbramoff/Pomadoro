@@ -11,12 +11,12 @@ import AudioToolbox
 class ViewController: UIViewController {
     
     enum IntervalType {
-        case Pomodoro
-        case RestBreak
+        case work
+        case rest
     }
     
     // MARK: - Properties
-    var intervals: [IntervalType] = [.Pomodoro, .RestBreak ]
+    var intervals: [IntervalType] = [.work, .rest ]
     var currentInterval = 0
     var timeRemaining = 0
     var timer = Timer()
@@ -26,8 +26,10 @@ class ViewController: UIViewController {
     
     let soundKey: String = "SelectedSound"
     
-    var pomodoroIntervalTime: Int = 1 // 25 минут
-    var restBreakIntervalTime: Int = 1  // 5 минут
+    var pomodoroIntervalTime: Int = 1
+    var restBreakIntervalTime: Int = 1
+    
+    private var pausedAnimationProgress: CGFloat = 0
     
     private lazy var rulesButton: UIButton = {
         let button = UIButton()
@@ -53,16 +55,32 @@ class ViewController: UIViewController {
     @IBOutlet weak var resetButton: UIButton!
     @IBOutlet weak var shapeViev: UIImageView!
     
-    private let startTimerLabel = UILabel(text: "Set the working time", font: .boldSystemFont(ofSize: 25), textColor: .white)
-    private let restTimerLabel = UILabel(text: "Set rest time", font: .boldSystemFont(ofSize: 25), textColor: .white)
+    private let startTimerLabel = UILabel(text: " Set working time", font: .boldSystemFont(ofSize: 25), textColor: .white)
+    private let restTimerLabel = UILabel(text: "     Set rest time", font: .boldSystemFont(ofSize: 25), textColor: .white)
     
     let pomodoroPicker = UIDatePicker()
     let restPicker = UIDatePicker()
+    
+    
+    private lazy var stackRestView = UIStackView(arrangedSubviews: [restPicker,
+                                                                    restTimerLabel],
+                                                 
+                                                 axis: .vertical,
+                                                 spacing: 0)
+    
+    private lazy var stackWorkView = UIStackView(arrangedSubviews: [ startTimerLabel, pomodoroPicker,
+                                                                   ],
+                                                 
+                                                 axis: .vertical,
+                                                 spacing: 0)
+    
+    var backgroundTask: UIBackgroundTaskIdentifier = .invalid
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customColor
+        view.setGradientBackground(colorOne: .whiteLight, colorTwo: .customColor)
         shapeViev.backgroundColor = .customColor
         animationCircular()
         resetToBegining()
@@ -75,7 +93,22 @@ class ViewController: UIViewController {
         loadIntervals()
     }
     
+    func registerBackgroundTask() {
+        backgroundTask = UIApplication.shared.beginBackgroundTask {
+            self.endBackgroundTask()
+        }
+    }
+
+    func endBackgroundTask() {
+        if backgroundTask != .invalid {
+            UIApplication.shared.endBackgroundTask(backgroundTask)
+            backgroundTask = .invalid
+        }
+    }
+
+    
     @objc private func updateCustomColor() {
+        view.setGradientBackground(colorOne: .whiteLight, colorTwo: .customColor)
         view.backgroundColor = .customColor
         shapeViev.backgroundColor = .customColor
         updateShapeLayerColor()
@@ -86,70 +119,61 @@ class ViewController: UIViewController {
         shapeLayer.strokeColor = UIColor.customColor.cgColor
     }
     
+    
+    
     // MARK: - Setup
     private func setupViews() {
-        
-        view.addSubview(startTimerLabel)
-        view.addSubview(pomodoroPicker)
-        view.addSubview(restTimerLabel)
-        view.addSubview(restPicker)
+        view.addSubview(stackWorkView)
+        view.addSubview(stackRestView)
         view.addSubview(rulesButton)
         view.addSubview(settingsButton)
         configureButtonStyle(startPauseButton)
         configureButtonStyle(resetButton)
         configureShapeViewStyle()
-        
         shapeViev.layer.cornerRadius = 35
     }
     
     @objc func updateSound() {
-        loadSelectedSound() // Обновление звука из UserDefaults
-        print("Звук обновлен: \(selectedSound)")
+        loadSelectedSound()
     }
     
     private func loadSelectedSound() {
         if let soundRawValue = UserDefaults.standard.string(forKey: soundKey),
            let sound = SoundType(rawValue: soundRawValue) {
             selectedSound = sound
-            print(selectedSound)
         }
     }
     
     func playSelectedSound() {
         selectedSound.play()
-        print(selectedSound)
     }
     
     func playThreeBeepSounds() {
-        playSelectedSound()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.playSelectedSound()
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-            self.playSelectedSound()
+        for i in 0..<3 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + (0.3 * Double(i))) {
+                self.playSelectedSound()
+            }
         }
     }
-    
+
     private func configureButtonStyle(_ button: UIButton) {
         button.layer.cornerRadius = 8
-        button.layer.shadowColor = UIColor.black.cgColor // Цвет тени
-        button.layer.shadowOpacity = 0.6 // Прозрачность тени
-        button.layer.shadowOffset = CGSize(width: 5, height: 5) // Смещение тени
-        button.layer.shadowRadius = 6 // Радиус размытия тени
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOpacity = 0.6
+        button.layer.shadowOffset = CGSize(width: 5, height: 5)
+        button.layer.shadowRadius = 6
         button.layer.masksToBounds = false
     }
     
     private func configureShapeViewStyle() {
-        shapeViev.layer.shadowColor = UIColor.black.cgColor // Цвет тени
-        shapeViev.layer.shadowOpacity = 0.5 // Прозрачность тени
-        shapeViev.layer.shadowOffset = CGSize(width: 5, height: 5) // Смещение тени
-        shapeViev.layer.shadowRadius = 15 // Радиус размытия тени
+        shapeViev.layer.shadowColor = UIColor.black.cgColor
+        shapeViev.layer.shadowOpacity = 0.5
+        shapeViev.layer.shadowOffset = CGSize(width: 5, height: 5)
+        shapeViev.layer.shadowRadius = 15
         shapeViev.layer.masksToBounds = false
     }
     
-    func setupDatePicker(_ picker: UIDatePicker, duration: Int, shadowColor: UIColor = .systemBlue, backgroundColor: UIColor = .systemGray5) {
+    func setupDatePicker(_ picker: UIDatePicker, duration: Int, shadowColor: UIColor = .greyBlue, backgroundColor: UIColor = .systemGray5) {
         picker.datePickerMode = .countDownTimer
         picker.tintColor = .white
         picker.preferredDatePickerStyle = .automatic
@@ -162,14 +186,13 @@ class ViewController: UIViewController {
         picker.layer.shadowOpacity = 0.8
         picker.layer.shadowOffset = CGSize(width: 3, height: 3)
         picker.layer.shadowRadius = 8
-        
         view.addSubview(picker)
     }
     
     func setupDatePickers() {
         setupDatePicker(pomodoroPicker, duration: pomodoroIntervalTime,
                         shadowColor: .white,
-                        backgroundColor: .lightGray.withAlphaComponent(0.2))
+                        backgroundColor: .lightGray.withAlphaComponent(0.3))
         
         setupDatePicker(restPicker, duration: restBreakIntervalTime,
                         shadowColor: .white,
@@ -182,7 +205,6 @@ class ViewController: UIViewController {
             self.rulesButton.setImage(UIImage(named: "Frame"), for: .normal)
         }
         
-        print(rulesButtonTapped)
         let vc = DescriptionViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true, completion: nil)
@@ -206,10 +228,12 @@ class ViewController: UIViewController {
         if timer.isValid {
             startPauseButton.setTitle("RESUME", for: .normal)
             resetButton.isEnabled = true
+            settingsButton.isEnabled = true
             pauseTimer()
         } else {
             startPauseButton.setTitle("PAUSE", for: .normal)
             resetButton.isEnabled = false
+            settingsButton.isEnabled = false
             if currentInterval == 0 {
                 startNextInterval()
             } else {
@@ -223,10 +247,12 @@ class ViewController: UIViewController {
             timer.invalidate()
         }
         resetToBegining()
+        settingsButton.isEnabled = true
     }
     
     func resetToBegining() {
         currentInterval = 0
+        settingsButton.isEnabled = true
         intervalLabel.text = "READY"
         intervalLabel.textColor = .white
         intervalLabel.font = .boldSystemFont(ofSize: 25)
@@ -243,22 +269,34 @@ class ViewController: UIViewController {
     
     func startNextInterval() {
         if currentInterval < intervals.count {
-            if intervals[currentInterval] == .Pomodoro {
+            settingsButton.isEnabled = false
+            
+            if intervals[currentInterval] == .work {
                 timeRemaining = Int(pomodoroPicker.countDownDuration)
                 intervalLabel.text = "Get to work!"
             } else {
                 timeRemaining = Int(restPicker.countDownDuration)
-                intervalLabel.text = "Greate job! Have a rest"
-                print("Круг закончился")
+                intervalLabel.text = "Great job! Have a rest"
             }
-            print("Круг закончился 1")
+            
             updateDisplay()
             startTimer()
             currentInterval += 1
-            print("Круг закончился")
         } else {
-            resetToBegining()
+            finishAllIntervals()
         }
+    }
+    
+    func finishAllIntervals() {
+        timer.invalidate()
+        endBackgroundTask()
+        playThreeBeepSounds()
+        
+        intervalLabel.text = "All done! Great job!"
+        
+        settingsButton.isEnabled = true
+        
+        resetToBegining()
     }
     
     func updateDisplay() {
@@ -270,6 +308,7 @@ class ViewController: UIViewController {
     
     func startTimer() {
         startAnimation()
+        registerBackgroundTask()
         timer = Timer.scheduledTimer(timeInterval: 1,target: self,selector: #selector(timerTick),userInfo: nil,repeats: true)
     }
     
@@ -279,14 +318,13 @@ class ViewController: UIViewController {
             updateDisplay()
         } else {
             timer.invalidate()
+            endBackgroundTask()
             playThreeBeepSounds()
             
             if currentInterval < intervals.count {
                 startNextInterval()
-                print("Next interval")
             } else {
-                intervalLabel.text = "All done! Greate jobe!"
-                print("Круг закончился")
+                intervalLabel.text = "All done! Great jobe!"
                 resetToBegining()
             }
         }
@@ -294,7 +332,7 @@ class ViewController: UIViewController {
     
     func pauseTimer() {
         timer.invalidate()
-        intervalLabel.text = "Paused."
+        pauseAnimation()
     }
     
     func minutesAndSeconds(from seconds: Int) -> (Int, Int) {
@@ -319,10 +357,10 @@ class ViewController: UIViewController {
         shapeLayer.strokeEnd = 1
         shapeLayer.lineCap = .round
         
-        shapeLayer.shadowColor = UIColor.blue.cgColor // Цвет тени
-        shapeLayer.shadowOpacity = 0.5 // Прозрачность тени
-        shapeLayer.shadowOffset = CGSize(width: 0, height: 0) // Смещение тени (по оси X и Y)
-        shapeLayer.shadowRadius = 10 // Радиус размытия тени
+        shapeLayer.shadowColor = UIColor.blue.cgColor
+        shapeLayer.shadowOpacity = 0.5
+        shapeLayer.shadowOffset = CGSize(width: 0, height: 0)
+        shapeLayer.shadowRadius = 10
         
         shapeLayer.strokeColor = UIColor.customColor.cgColor
         shapeViev.layer.addSublayer(shapeLayer)
@@ -340,6 +378,15 @@ class ViewController: UIViewController {
         shapeLayer.add(animation, forKey: "strokeAnimation")
     }
     
+    func pauseAnimation() {
+            guard let shapeLayer = shapeViev.layer.sublayers?.first(where: { $0 is CAShapeLayer }) as? CAShapeLayer else { return }
+            if let presentationLayer = shapeLayer.presentation() {
+                pausedAnimationProgress = presentationLayer.strokeEnd
+                shapeLayer.removeAnimation(forKey: "strokeAnimation")
+            }
+        }
+    
+    
     private func loadIntervals() {
         let savedCycles = UserDefaults.standard.integer(forKey: "TotalCycles")
         intervals = generateIntervals(forCycles: savedCycles)
@@ -348,8 +395,8 @@ class ViewController: UIViewController {
     private func generateIntervals(forCycles cycles: Int) -> [IntervalType] {
         var intervals: [IntervalType] = []
         for _ in 0..<cycles {
-            intervals.append(.Pomodoro)
-            intervals.append(.RestBreak)
+            intervals.append(.work)
+            intervals.append(.rest)
         }
         return intervals
     }
@@ -358,15 +405,15 @@ class ViewController: UIViewController {
 extension ViewController {
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            pomodoroPicker.topAnchor.constraint(equalTo: shapeViev.topAnchor, constant: -120),
-            pomodoroPicker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pomodoroPicker.heightAnchor.constraint(equalToConstant: 100),
-            pomodoroPicker.widthAnchor.constraint(equalToConstant: 220),
+            stackWorkView.topAnchor.constraint(equalTo: shapeViev.topAnchor, constant: -160),
+            stackWorkView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackWorkView.heightAnchor.constraint(equalToConstant: 150),
+            stackWorkView.widthAnchor.constraint(equalToConstant: 200),
             
-            restPicker.topAnchor.constraint(equalTo: resetButton.bottomAnchor, constant: 10),
-            restPicker.heightAnchor.constraint(equalToConstant: 80),
-            restPicker.widthAnchor.constraint(equalToConstant: 200),
-            restPicker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackRestView.topAnchor.constraint(equalTo: resetButton.bottomAnchor, constant: 10),
+            stackRestView.heightAnchor.constraint(equalToConstant: 150),
+            stackRestView.widthAnchor.constraint(equalToConstant: 200),
+            stackRestView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             rulesButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             rulesButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
@@ -377,12 +424,6 @@ extension ViewController {
             settingsButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             settingsButton.widthAnchor.constraint(equalToConstant: 38),
             settingsButton.heightAnchor.constraint(equalToConstant: 36),
-            
-            startTimerLabel.bottomAnchor.constraint(equalTo: pomodoroPicker.topAnchor,constant: -15),
-            startTimerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            restTimerLabel.topAnchor.constraint(equalTo: restPicker.bottomAnchor, constant: 15),
-            restTimerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
 }
@@ -392,6 +433,5 @@ extension ViewController: SettingsViewControllerDelegate {
         intervals = generateIntervals(forCycles: totalCycles)
         currentInterval = 0
         resetToBegining()
-        print("Интервалы обновлены: \(intervals)")
     }
 }

@@ -46,8 +46,8 @@
             filePath = "Pomadoro/SettingViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "146"
-            endingLineNumber = "146"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
             landmarkName = "cyclesStepperChanged()"
             landmarkType = "7">
          </BreakpointContent>

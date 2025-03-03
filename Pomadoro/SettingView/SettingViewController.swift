@@ -13,7 +13,6 @@ protocol SettingsViewControllerDelegate: AnyObject {
 
 class SettingsViewController: UIViewController, SoundSelectionDelegate {
     
-    
     // MARK: - Properties
     weak var delegate: SettingsViewControllerDelegate?
     var totalCycles: Int {
@@ -69,9 +68,8 @@ class SettingsViewController: UIViewController, SoundSelectionDelegate {
     private let blueButton = ColorButton(color: .customBlue)
     private let greenButton = ColorButton(color: .green)
     private let blackButton = ColorButton(color: .black)
-    private let orangeButton = ColorButton(color: .orange)
-    private let brownButton = ColorButton(color: .brown)
-    
+    private let orangeButton = ColorButton(color: .orangeRed)
+    private let brownButton = ColorButton(color: .lightBlue)
     
     private func buttonAnimate(_ button: UIButton) {
         UIView.animate(withDuration: 0.2, animations: {
@@ -86,29 +84,26 @@ class SettingsViewController: UIViewController, SoundSelectionDelegate {
     @objc private func blueButtonTapped() {
         buttonAnimate(blueButton)
         UIColor.updateCustomColor(to: .customBlue)
-        print("Color button tapped!")
     }
     
     @objc private func greenButtonTapped() {
         buttonAnimate(greenButton)
         UIColor.updateCustomColor(to: .customGreen)
-        print("Color button tapped!")
     }
     
     @objc private func blackButtonTapped() {
         buttonAnimate(blackButton)
         UIColor.updateCustomColor(to: .black)
-        print("Color button tapped!")
     }
+    
     @objc private func orangeButtonTapped() {
         buttonAnimate(orangeButton)
-        UIColor.updateCustomColor(to: .orange)
-        print("Color button tapped!")
+        UIColor.updateCustomColor(to: .orangeRed)
     }
+    
     @objc private func brownButtonTapped() {
         buttonAnimate(brownButton)
-        UIColor.updateCustomColor(to: .brown)
-        print("Color button tapped!")
+        UIColor.updateCustomColor(to: .lightBlue)
     }
     
         
@@ -124,7 +119,6 @@ class SettingsViewController: UIViewController, SoundSelectionDelegate {
     // MARK: - SoundSelectionDelegate
     func didSelectSound(_ sound: SoundType) {
         sound.play()
-        print("Сохраненный звук: \(UserDefaults.standard.string(forKey: "SelectedSound") ?? "nil")")
     }
     
     // MARK: - Actions
@@ -161,15 +155,16 @@ class SettingsViewController: UIViewController, SoundSelectionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         soundSelectionView.delegate = self
-        view.backgroundColor = .customColor
+        view.setGradientBackground(colorOne: .whiteLight, colorTwo: .customColor)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateCustomColor), name: .customColorDidChange, object: nil)
         soundSelectionView.addShadowOnView()
         cyclesStepper.addTarget(self, action: #selector(cyclesStepperChanged), for: .valueChanged)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateCustomColor), name: .customColorDidChange, object: nil)
         setupUI()
         setConstraints()
     }
     
     @objc private func updateCustomColor() {
+    view.setGradientBackground(colorOne: .whiteLight, colorTwo: .customColor)
         view.backgroundColor = .customColor
         buttonBackgroundView.backgroundColor = .customColor
     }
@@ -204,13 +199,13 @@ extension SettingsViewController {
             settingLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             settingLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 28),
             
-            buttonBackgroundView.topAnchor.constraint(equalTo: view.topAnchor, constant: 160),
+            colorPickerLabel.topAnchor.constraint(equalTo: settingLabel.bottomAnchor, constant: 20),
+            colorPickerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            buttonBackgroundView.topAnchor.constraint(equalTo: colorPickerLabel.topAnchor, constant: 40),
             buttonBackgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             buttonBackgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             buttonBackgroundView.heightAnchor.constraint(equalToConstant: 150),
-            
-            colorPickerLabel.topAnchor.constraint(equalTo: settingLabel.bottomAnchor, constant: 20),
-            colorPickerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             stackView.centerXAnchor.constraint(equalTo: buttonBackgroundView.centerXAnchor),
             stackView.centerYAnchor.constraint(equalTo: buttonBackgroundView.centerYAnchor),
@@ -230,13 +225,14 @@ extension SettingsViewController {
             settIntervalLabel.topAnchor.constraint(equalTo: soundSelectionView.bottomAnchor, constant: 20),
             settIntervalLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
+            cyclesStepper.centerYAnchor.constraint(equalTo: cyclesValueLabel.centerYAnchor),
+            cyclesStepper.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            
             cyclesValueLabel.topAnchor.constraint(equalTo: settIntervalLabel.bottomAnchor, constant: 30),
             cyclesValueLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 110),
             cyclesValueLabel.trailingAnchor.constraint(equalTo: cyclesStepper.leadingAnchor, constant: -10),
-            cyclesValueLabel.widthAnchor.constraint(equalToConstant: 50),
+            cyclesValueLabel.widthAnchor.constraint(equalToConstant: 50)
             
-            cyclesStepper.centerYAnchor.constraint(equalTo: cyclesValueLabel.centerYAnchor),
-            cyclesStepper.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
         ])
     }
 }
