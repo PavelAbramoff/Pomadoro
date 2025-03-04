@@ -13,5 +13,4 @@ Repeat the cycle: After 4 pomodoros, take a longer break (15–30 minutes).
 Why it works:
 Reduces burnout: Frequent breaks help prevent mental fatigue.
 Boosts motivation: Small, timed chunks make big tasks feel more manageable.
-Improves focus: Knowing a break is coming makes it easier to stay on track.
-Would you like me to help you create a Pomodoro schedule tailored to your day or your boat monitoring project? Let me know! 🚀
+Improves focus: Knowing a break is coming makes it easier to stay on track.🚀
